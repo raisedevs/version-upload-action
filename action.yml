@@ -1,0 +1,36 @@
+name: "Raise.dev Firmware Uploader"
+description: "Raise's GitHub Action for uploading firmware to Raise.dev."
+inputs:
+  name:
+    description: "The name of the firmware"
+    required: true
+  source-url:
+    description: "The source URL of the firmware"
+    default: ${{ github.repositoryUrl }}
+    required: false
+  path:
+    description: "The path of the firmware binary to upload"
+    required: true
+outputs:
+  url:
+    description: "The URL of the newly uploaded firmware"
+    value: ${{ steps.firmware-json.outputs.url }}
+  binary-url:
+    description: "The URL of the newly uploaded firmware binary"
+    value: ${{ steps.firmware-json.outputs.binary-url }}
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        curl \
+          -F "firmware[name]=${{ inputs.name }}" \
+          -F "firmware[source_url]=${{ inputs.source-url }}" \
+          -F "firmware[binary]=@${{ inputs.path }}" \
+          https://dashboard.raise.dev/firmwares.json \
+          | tee firmware.json
+      shell: bash
+    - id: firmware-json
+      run: |
+        echo "url=$(jq --raw-output ".url" firmware.json)" >> $GITHUB_OUTPUT
+        echo "binary-url=$(jq --raw-output ".binary_url" firmware.json)" >> $GITHUB_OUTPUT
+      shell: bash
