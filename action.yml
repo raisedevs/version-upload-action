@@ -32,5 +32,5 @@ runs:
     - id: firmware-json
       run: |
         echo "url=$(jq --raw-output ".url" firmware.json)" >> $GITHUB_OUTPUT
-        echo "binary-url=$(jq --raw-output ".binary_url" firmware.json)" >> $GITHUB_OUTPUT
+        echo "binary-url=$(jq --raw-output ".url" firmware.json)" >> $GITHUB_OUTPUT
       shell: bash

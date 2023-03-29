@@ -1,0 +1,24 @@
+name: Tests
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: yamllint action.yml
+      - run: echo "$PWD/.github/workflows/fakecurl" >> $GITHUB_PATH
+      - name: Run raisedevs/firmware-upload-action@${{ github.sha }}
+        uses: ./
+        id: firmware-upload
+        with:
+          name: Test firmware
+          source-url: test.dev
+          path: test
+      - name: Output firmware URLs
+        run: |
+          echo Firmware URL: ${{ steps.firmware-upload.outputs.url }}
+          echo Firmware Binary URL: ${{ steps.firmware-upload.outputs.binary-url }}

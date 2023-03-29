@@ -1,0 +1,6 @@
+#!/bin/bash
+# A stub for curl that always outputs the same JSON
+set -eo pipefail
+
+echo '{"url":"fake_url","binary_url":"fake_binary_url"}' \
+  | jq .
