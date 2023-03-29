@@ -1,0 +1,21 @@
+---
+extends: default
+rules:
+  comments:
+    level: error
+  comments-indentation:
+    level: error
+  document-end:
+    present: false
+    level: error
+  document-start:
+    present: false
+    level: error
+  empty-values: enable
+  float-values: enable
+  # GitHub diff UI wraps beyond 118 characters
+  line-length:
+    max: 118
+  octal-values: enable
+  truthy:
+    level: error
