@@ -7,19 +7,11 @@ inputs:
   firmware:
     description: "The name of the Firmware"
     required: true
-  path:
-    description: "The path of the firmware binary to upload"
+  binary:
+    description: "The path of the binary to upload"
     required: true
   name:
-    description: "The name of the Version (defaults to `git describe` output)"
-    required: false
-  commit:
-    description: "The commit SHA of the Version (defaults to commit SHA)"
-    default: ${{ github.sha }}
-    required: false
-  url:
-    description: "A URL corresponding to this Version (defaults to GitHub Actions run URL)"
-    default: ${{ github.repositoryUrl }}/actions/runs/${{ github.run_id }}/jobs/${{ github.run_number }}
+    description: "The name of the Version (defaults to `git describe` output). Must be unique within a Firmware."
     required: false
 outputs:
   name:
@@ -36,25 +28,34 @@ runs:
   steps:
     - id: set-name
       run: |
+        # Set name input
+        set -e
+
         name="${{ inputs.name }}"
         if [[ -z "${name}" ]]; then
           name="$(git describe --tags --always)"
         fi
-        echo "name=${name}" >> $GITHUB_OUTPUT
+
+        echo "name=${name}" | tee -a ${GITHUB_OUTPUT}
       shell: bash
     - run: |
-        eval "$(grep "^name=" $GITHUB_OUTPUT)"
-        curl \
-          -F "version[name]=${{ inputs.name }}" \
-          -F "version[commit]=${{ inputs.commit }}" \
-          -F "version[url]=${{ inputs.url }}" \
-          -F "version[binary]=@${{ inputs.path }}" \
-          https://dashboard.raise.dev/projects/${{ inputs.project }}/firmwares/${{ inputs.firmware }}/v/new.json \
+        # Make API call to Raise.dev
+        set -e
+
+        set -x
+        curl --fail-with-body \
+          --form "workflow_run_id=${{ github.run_id }}" \
+          --form "version[name]=${{ steps.set-name.outputs.name }}" \
+          --form "version[binary]=@${{ inputs.binary }}" \
+          https://dashboard.raise.dev/projects/${{ inputs.project }}/firmwares/${{ inputs.firmware }}/v.json \
           | tee version.json
       shell: bash
     - id: version-json
       run: |
-        echo "name=$(jq --raw-output ".name" version.json)" >> $GITHUB_OUTPUT
-        echo "show-url=$(jq --raw-output ".show_url" version.json)" >> $GITHUB_OUTPUT
-        echo "binary-url=$(jq --raw-output ".binary_url" version.json)" >> $GITHUB_OUTPUT
+        # Set outputs
+        set -e
+
+        echo "name=$(jq --raw-output ".name" version.json)" | tee -a ${GITHUB_OUTPUT}
+        echo "show-url=$(jq --raw-output ".show_url" version.json)" | tee -a ${GITHUB_OUTPUT}
+        echo "binary-url=$(jq --raw-output ".binary_url" version.json)" | tee -a ${GITHUB_OUTPUT}
       shell: bash

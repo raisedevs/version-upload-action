@@ -11,14 +11,15 @@ jobs:
       - uses: actions/checkout@v3
       - run: yamllint action.yml
       - run: echo "$PWD/.github/workflows/fakecurl" >> $GITHUB_PATH
-      - name: Run raisedevs/firmware-upload-action@${{ github.sha }}
+      - name: Run raisedevs/version-upload-action@${{ github.sha }}
         uses: ./
-        id: firmware-upload
+        id: version-upload
         with:
-          name: Test firmware
-          source-url: test.dev
-          path: test
-      - name: Output firmware URLs
+          project: test-project
+          firmware: test-firmware
+          binary: test-binary
+      - name: Output Version details
         run: |
-          echo Firmware URL: ${{ steps.firmware-upload.outputs.url }}
-          echo Firmware Binary URL: ${{ steps.firmware-upload.outputs.binary-url }}
+          echo Version Name: ${{ steps.version-upload.outputs.name }}
+          echo Version Show URL: ${{ steps.version-upload.outputs.show-url }}
+          echo Version Binary URL: ${{ steps.version-upload.outputs.binary-url }}

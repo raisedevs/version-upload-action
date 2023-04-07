@@ -14,7 +14,7 @@ steps:
   with:
     project: raisedevs
     firmware: raise_firmware
-    path: .pio/build/esp32dev/firmware.bin
+    binary: .pio/build/esp32dev/firmware.bin
 ```
 
 And if you wish to use the outputs, add something like:
