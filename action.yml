@@ -47,7 +47,7 @@ runs:
           --form "workflow_run_id=${{ github.run_id }}" \
           --form "version[name]=${{ steps.set-name.outputs.name }}" \
           --form "version[binary]=@${{ inputs.binary }}" \
-          https://dashboard.raise.dev/accounts/${{ inputs.account }}/firmwares/${{ inputs.firmware }}/v.json \
+          https://console.raise.dev/accounts/${{ inputs.account }}/firmwares/${{ inputs.firmware }}/v.json \
           | tee version.json
       shell: bash
     - id: version-json
