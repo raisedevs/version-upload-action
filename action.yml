@@ -1,5 +1,5 @@
 name: "Raise.dev Version Uploader"
-description: "Raise's GitHub Action for uploading Versions to Raise.dev."
+description: "Raise's GitHub Action for uploading Versions to the Raise.dev Console."
 inputs:
   account:
     description: "The name of the Account"
@@ -8,7 +8,7 @@ inputs:
     description: "The name of the Firmware"
     required: true
   binary:
-    description: "The path of the binary to upload"
+    description: "The path of the binary file to upload"
     required: true
   name:
     description: "The name of the Version (defaults to `git describe` output). Must be unique within a Firmware."
@@ -21,7 +21,7 @@ outputs:
     description: "The URL of the newly uploaded Version page"
     value: ${{ steps.version-json.outputs.show-url }}
   binary-url:
-    description: "The URL of the newly uploaded Version binary"
+    description: "The URL of the newly uploaded Version binary for download"
     value: ${{ steps.version-json.outputs.binary-url }}
 runs:
   using: "composite"

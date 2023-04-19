@@ -1,10 +1,10 @@
 # version-upload-action
 
-Raise's GitHub Action for uploading Versions and their binary data to Raise.dev.
+Raise.dev's GitHub Action for uploading Versions and their binary data to the Raise.dev Console.
 
 ## Using
 
-Add something like the following to a GitHub Actions workflow:
+Once you've signed up to <https://console.raise.dev> and had your User enabled, add something like the following to a GitHub Actions workflow:
 
 ```yaml
 steps:
@@ -12,7 +12,7 @@ steps:
   id: version-upload
   if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
   with:
-    project: raisedevs
+    account: raisedevs
     firmware: raise_firmware
     binary: .pio/build/esp32dev/firmware.bin
 ```
