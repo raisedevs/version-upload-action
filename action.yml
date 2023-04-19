@@ -1,4 +1,8 @@
 name: "Raise.dev Version Uploader"
+author: Raise.dev
+branding:
+  color: yellow
+  icon: upload-cloud
 description: "Raise's GitHub Action for uploading Versions to the Raise.dev Console."
 inputs:
   account:
