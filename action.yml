@@ -5,8 +5,8 @@ branding:
   icon: upload-cloud
 description: "Raise's GitHub Action for uploading Versions to the Raise.dev Console."
 inputs:
-  account:
-    description: "The name of the Account"
+  workspace:
+    description: "The name of the Workspace"
     required: true
   firmware:
     description: "The name of the Firmware"
@@ -51,7 +51,7 @@ runs:
           --form "workflow_run_id=${{ github.run_id }}" \
           --form "version[name]=${{ steps.set-name.outputs.name }}" \
           --form "version[binary]=@${{ inputs.binary }}" \
-          https://console.raise.dev/accounts/${{ inputs.account }}/firmwares/${{ inputs.firmware }}/v.json \
+          https://console.raise.dev/workspaces/${{ inputs.workspace }}/firmwares/${{ inputs.firmware }}/v.json \
           | tee version.json
       shell: bash
     - id: version-json

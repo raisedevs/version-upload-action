@@ -15,7 +15,7 @@ jobs:
         uses: ./
         id: version-upload
         with:
-          account: test-account
+          workspace: test-workspace
           firmware: test-firmware
           binary: test-binary
       - name: Output Version details
