@@ -14,7 +14,7 @@ steps:
   id: version-upload
   if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
   with:
-    account: raisedevs
+    workspace: raisedevs
     firmware: firmware
     binary: .pio/build/esp32dev/firmware.bin
 ```
@@ -29,7 +29,7 @@ And if you wish to use the outputs, add something like:
     echo Version Binary URL: ${{ steps.version-upload.outputs.binary-url }}
 ```
 
-If you haven't already, add the relevant `Account` and `Firmware` in the Raise.dev Console and connect the GitHub App to your GitHub Repository for your `Firmware`.
+If you haven't already, add the relevant `Workspace` and `Firmware` in the Raise.dev Console and connect the GitHub App to your GitHub Repository for your `Firmware`.
 
 If you haven't set up a GitHub Actions workflow yet, don't worry!
 
