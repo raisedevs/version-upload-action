@@ -1,41 +1,70 @@
 # version-upload-action
 
-Raise.dev's GitHub Action for uploading `Version`s and their binary data to the Raise.dev Console.
+[Raise.dev](https://raise.dev)'s GitHub Action for uploading `Version`s and their binary data to the Raise.dev Console.
 
 ## Usage
 
 **Note: unless a Raise.dev cofounder has invited you to join the Raise.dev Console, you can't use this (yet).**
 
-Once you've signed in and had your `User` enabled, add something like this to your GitHub Actions workflow:
+1. Sign in to the Raise.dev Console and follow the onboarding steps until it tells you to use this library.
 
-```yaml
-steps:
-- uses: raisedevs/version-upload-action@main
-  id: version-upload
-  if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
-  with:
-    workspace: raisedevs
-    firmware: firmware
-    binary: .pio/build/esp32dev/firmware.bin
-```
+1. Setup GitHub Actions for your preferred environment (we recommend [PlatformIO](https://platformio.org)) by adding this file to `.github/workflows/build.yml` in your repository:
 
-And if you wish to use the outputs, add something like:
+   ```yaml
+   # The name of the GitHub Actions workflow
+   name: Build
+   # When to build i.e. on pushes to main branch, pushes to pull requests, a published release
+   on:
+     push:
+       branches:
+         - main
+     pull_request:
+     release:
+       types: [published]
+   jobs:
+     # The name of the GitHub Actions job
+     build:
+       runs-on: ubuntu-latest
+       steps:
+         # Checkout the Git repository
+         - uses: actions/checkout@v3
+         # Cache PlatformIO data to speed things up on repeated runs
+         - uses: actions/cache@v3
+           with:
+             path: |
+               ~/.cache/pip
+               ~/.platformio/.cache
+             key: ${{ runner.os }}-pio
+         # Setup Python to install PlatformIO
+         - uses: actions/setup-python@v4
+           with:
+             python-version: "3.9"
+         # Install PlatformIO CLI
+         - run: pip install --upgrade platformio
+         # Run PlatformIO CLI to build firmware
+         - run: pio run
+         # Upload firmware to the Raise.dev Console's raisedevs Workspace and firmware Firmware
+         - uses: raisedevs/version-upload-action@main
+           id: version-upload
+           if: github.ref == 'refs/heads/main'
+           with:
+             workspace: raisedevs
+             firmware: firmware
+             binary: .pio/build/esp32/firmware.bin
+         # Output the name and some URLs for debugging and quick links
+         - name: Output Version details
+           if: ${{ github.ref == 'refs/heads/main' || github.event_name == 'release' && github.event.action == 'published' }}
+           run: |
+             echo Version Name: ${{ steps.version-upload.outputs.name }}
+             echo Version Show URL: ${{ steps.version-upload.outputs.show-url }}
+             echo Version Binary URL: ${{ steps.version-upload.outputs.binary-url }}
+   ```
 
-```yaml
-- name: Output Version details
-  run: |
-    echo Version Name: ${{ steps.version-upload.outputs.name }}
-    echo Version Show URL: ${{ steps.version-upload.outputs.show-url }}
-    echo Version Binary URL: ${{ steps.version-upload.outputs.binary-url }}
-```
+1. When you're set up correctly, when you push a new commit and/or tag to your GitHub repository: it will automatically update all your `Device`s!
 
-If you haven't already, add the relevant `Workspace` and `Firmware` in the Raise.dev Console and connect the GitHub App to your GitHub Repository for your `Firmware`.
+---
 
-If you haven't set up a GitHub Actions workflow yet, don't worry!
-
-Check out the [workflow in raisedevs/raise-dev-library](https://github.com/raisedevs/raise-dev-library/blob/main/.github/workflows/build.yml) for an example of how to use PlatformIO in GitHub Actions.
-
-Note that you should use `pio run` instead of `pio ci` for building a `Firmware` GitHub repository.
+If you have any problems: contact [Mike](mailto:mike@raise.dev) and he'll help.
 
 ## Status
 
