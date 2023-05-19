@@ -1,4 +1,4 @@
-# version-upload-action
+# raisedevs/version-upload-action
 
 [Raise.dev](https://raise.dev)'s GitHub Action for uploading `Version`s and their binary data to the Raise.dev Console.
 
@@ -44,6 +44,7 @@
          # Run PlatformIO CLI to build firmware
          - run: pio run
          # Upload firmware to the Raise.dev Console's raisedevs Workspace and firmware Firmware
+         # only on a push to the main branch or published release
          - uses: raisedevs/version-upload-action@main
            id: version-upload
            if: github.ref == 'refs/heads/main'
