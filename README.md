@@ -6,6 +6,10 @@
 
 **Note: unless a Raise.dev cofounder has invited you to join the Raise.dev Console, you can't use this (yet).**
 
+**If you're starting a new project or learn better from templates/examples than reading step-by-step guides: check out [raisedevs/arduino-esp32-firmware-example](https://github.com/raisedevs/arduino-esp32-firmware-example) or [raisedevs/arduino-esp32-firmware-example](https://github.com/raisedevs/arduino-esp32-firmware-example) template repositories.**
+
+---
+
 1. Sign in to the Raise.dev Console and follow the onboarding steps until it tells you to use this library.
 
 1. Setup GitHub Actions for your preferred environment (we recommend [PlatformIO](https://platformio.org)) by adding this file to `.github/workflows/build.yml` in your repository:
